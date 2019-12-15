@@ -35,7 +35,6 @@ export default [
       isShowFooter:true
     }
   },
-
   {
     path:'/login',
     component:Login

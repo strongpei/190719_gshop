@@ -33,8 +33,13 @@
 
     methods: {
       goto (path) {
-        // 编程式路由跳转
-        this.$router.replace(path)
+        //如果点击当前项,刷新请求
+        if(path!==this.$route.path){
+          // 编程式路由跳转
+           this.$router.replace(path)
+        }else{
+          window.location = path
+        }
       }
     }
   }

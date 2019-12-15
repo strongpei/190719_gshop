@@ -309,7 +309,19 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import Swiper from "swiper"
+  import 'swiper/css/swiper.css'
+
+  
   export default {
+    mounted(){
+    new Swiper('.swiper-container',{
+      loop:true,
+      pagination:{
+        el:'.swiper-pagination',
+    }
+  })
+    }
   }
 </script>
 
