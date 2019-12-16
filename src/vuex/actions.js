@@ -28,12 +28,14 @@ export default{
   /*
   获取商品分类的异步action
   */
- async getCategorys({commit}){
+ async getCategorys({commit},callback){
   //发异步请求
  const result = await reqCategorys()  
  if (result.code===0) {
      const categorys = result.data
-     commit(RECEIVE_CATEGORYS,categorys)
+     commit(RECEIVE_CATEGORYS,categorys)//内部同步调用mutation更新数据状态
+     //在数据更新之后,调用回调函数
+     typeof callback === 'function' && callback()
    }
  },
  /*

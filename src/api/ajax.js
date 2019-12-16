@@ -10,6 +10,7 @@
 
 import axios from 'axios'
 import qs from 'qs'
+import { Indicator } from "mint-ui"
 
 const instance = axios.create({
   baseURL:'/api',
@@ -17,7 +18,8 @@ const instance = axios.create({
 })
 //添加请求拦截器
 instance.interceptors.request.use((config) =>{
-  console.log('req interceptor')
+  //显示请求loading
+  Indicator.open()
   //3.对请求体参数进行urlencode处理, 而不使用默认的json方式(后台接口不支持)
   const data = config.data
   if(data instanceof Object){
@@ -28,8 +30,8 @@ instance.interceptors.request.use((config) =>{
 //添加响应拦截器
 instance.interceptors.response.use(
   response =>{
-    
-    console.log('res interceptor')
+    //隐藏请求loading
+    Indicator.close()
     return response.data
   },
   error =>{

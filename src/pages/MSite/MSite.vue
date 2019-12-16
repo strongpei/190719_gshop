@@ -11,106 +11,14 @@
     </Header>
     <!--首页导航-->
     <nav class="msite_nav">
-      <div class="swiper-container">
+      <div ref="scl" class="swiper-container">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <div class="link_to_food">
+          <div class="swiper-slide" v-for="(cs,index) in categorysArr2" :key="index">
+            <div class="link_to_food" v-for="(c,index) in cs" :key="index">
               <div class="food_container">
-                <img src="./images/nav/1.jpg">
+                <img :src="'https://fuss10.elemecdn.com' + c.image_url">
               </div>
-              <span>甜品饮品</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/2.jpg">
-              </div>
-              <span>商超便利</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/3.jpg">
-              </div>
-              <span>美食</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/4.jpg">
-              </div>
-              <span>简餐</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/5.jpg">
-              </div>
-              <span>新店特惠</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/6.jpg">
-              </div>
-              <span>准时达</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/7.jpg">
-              </div>
-              <span>预订早餐</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/8.jpg">
-              </div>
-              <span>土豪推荐</span>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/9.jpg">
-              </div>
-              <span>甜品饮品</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/10.jpg">
-              </div>
-              <span>商超便利</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/11.jpg">
-              </div>
-              <span>美食</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/12.jpg">
-              </div>
-              <span>简餐</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/13.jpg">
-              </div>
-              <span>新店特惠</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/14.jpg">
-              </div>
-              <span>准时达</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/1.jpg">
-              </div>
-              <span>预订早餐</span>
-            </div>
-            <div class="link_to_food">
-              <div class="food_container">
-                <img src="./images/nav/2.jpg">
-              </div>
-              <span>土豪推荐</span>
+              <span>{{c.title}}</span>
             </div>
           </div>
         </div>
@@ -181,23 +89,74 @@
 <script type="text/ecmascript-6">
   import Swiper from "swiper"
   import 'swiper/css/swiper.css'
+  // import _ from "lodash"
+  import chunk from "lodash/chunk"
   import {mapState} from "vuex"
 
   
   export default {
     computed:{
-      ...mapState(['address','categorys','shops'])
+      ...mapState(['address','categorys','shops']),
+      //所有分类的二维数组
+      categorysArr(){
+        const { categorys} = this
+        const bigArr = []
+        const smallArr = []
+        //遍历总数组
+        categorys.forEach(c => {
+          //小数组放进大数组
+          if(smallArr.length===0){
+             bigArr.push(smallArr)
+          }        
+          smallArr.push(c)
+          if(smallArr.length===8){
+            smallArr = []
+          }
+        })
+        //返回二维数组
+        return bigArr
+      },
+      categorysArr2(){
+        // return _.chunk(this.categorys,8)
+        return chunk(this.categorys,8)
+      }
     },
-    mounted(){
-      this.$store.dispatch('getCategorys')
-      this.$store.dispatch('getShops')
-    new Swiper('.swiper-container',{
-      loop:true,
-      pagination:{
-        el:'.swiper-pagination',
-    }
-  })
-    }
+    async mounted(){
+      // this.$store.dispatch('getCategorys',()=>{
+      //   this.$nextTick(()=>{
+      //     new Swiper('.swiper-container',{
+      //     loop:true,
+      //     pagination:{
+      //       el:'.swiper-pagination',
+      //       }
+      //     })
+      //   })  
+      // })
+      await this.$store.dispatch('getCategorys')
+      new Swiper('.swiper-container',{
+          loop:true,
+          pagination:{
+            el:'.swiper-pagination',
+            }
+        }) 
+        this.$store.dispatch('getShops')  
+    },
+    // watch:{
+    //   categorys(){
+    //      new Swiper('.swiper-container',{
+    //       loop:true,
+    //       pagination:{
+    //         el:'.swiper-pagination',
+    //         }
+    //       })
+    //   }
+    // }
+    /*
+      解决swiper轮播不正常的问题
+      方式一: watch +nextTick()
+      方式二: callback +nextTick()
+      方式三: 利用地势path()返回的promise
+    */ 
   }
 </script>
 
