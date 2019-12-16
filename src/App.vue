@@ -9,7 +9,7 @@
   import FooterGuide from "@/components/FooterGuide/FooterGuide.vue"
   export default {
     async mounted(){
-     this.$store.dispath('getAddress')
+     this.$store.dispatch('getAddress')
     },
 
     components:{
